@@ -1,0 +1,23 @@
+{
+  "name": "identity-management",
+  "version": "1.0.0",
+  "description": "Authentication Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olluxg/Identity-Management.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olluxg/Identity-Management/issues"
+  },
+  "homepage": "https://github.com/olluxg/Identity-Management#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
