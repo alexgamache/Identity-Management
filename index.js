@@ -14,6 +14,7 @@ app.use(bodyParser.json())
 //link endpoints to controller functions here
 app.get('/', example.test)
 app.post('/register', user.register)
+app.post('/manage', user.manageStatus)
 
 //listen on the url
 app.listen(port, () => {
