@@ -9,7 +9,7 @@ exports.register = async function(userObj){
 	await mysql.end()
 	const token = jwt.sign(dbObj[0], process.env.SECRET);
 	return {
-	    status: "good",
+	    status: "Good",
 	    message: "user registered successfully",
 	    token: token
 	}
