@@ -25,6 +25,7 @@ exports.register = async function(userObj){
     }
 }
 
+
 exports.lockAccount = async function(id, task){
 	try{
 		const mysql = require('../helpers/db').mysql

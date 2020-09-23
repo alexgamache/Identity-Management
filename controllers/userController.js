@@ -33,6 +33,7 @@ exports.register = async function(req, res){
     }
 }
 
+
 exports.manageStatus = async function(req, res){
 	try{
 		const task = req.body.task
