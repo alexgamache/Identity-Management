@@ -15,7 +15,8 @@ exports.register = async function(req, res){
 				res.send({
 					status: 200,
 					message: registration.message,
-					data: registration.token
+					data: registration.token,
+					userID: registration.userID
 				})
 			}else{
 				res.send({
