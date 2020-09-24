@@ -18,10 +18,10 @@ exports.register = async function(req, res){
 					data: registration.token
 				})
 			}else{
-			res.send({
-				status: 500,
-				message: "There was an error registering this user"
-			})
+				res.send({
+					status: 500,
+					message: registration.message
+				})
 			}
 		}
     }
