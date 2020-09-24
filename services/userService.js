@@ -18,12 +18,13 @@ exports.register = async function(userObj){
 		
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
 		await mysql.end()
-		const token = await jwt.sign({user: dbObj[0], id: dbObj[0].id}, process.env.SECRET);
+		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
 		await sendmail(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
-			token: token
+			token: token,
+			userID: dbObj[0].id 
 		}
     }
     catch(err){
