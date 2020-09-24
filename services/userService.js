@@ -28,25 +28,11 @@ exports.register = async function(userObj){
 exports.login = async function(userObj){
 	try{
 		const mysql = require('../helpers/db').mysql
+		await mysql.query('SELECT * FROM user WHERE')
 		var email = userObj.email;
-		var password = userObj.password;
-		mysql.query('SELECT * FROM user WHERE email =?' [email], async function (error, results, fields) {
-			if (error) {
-				return {
-					status: "Bad",
-					message: "Code 400, bad email lookup",
-					token: token
-				} else {
-					if(results.length > 0) {
-						if (passwor)
-					}
-				}
-			}
-		})
-	}
- 
-}
 
+	}
+}
 
 exports.lockAccount = async function(id, task){
 	try{

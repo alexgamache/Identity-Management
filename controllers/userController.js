@@ -18,6 +18,7 @@ exports.register = async function(req, res){
 					data: registration.token
 				}))
 			}else{
+			console.log(registration.message);
 			res.send(JSON.stringify({
 				status: 500,
 				message: "There was an error registering this user"
@@ -33,11 +34,46 @@ exports.register = async function(req, res){
     }
 }
 
+<<<<<<< Updated upstream
 
 exports.login = async function(req, res){
 	
 }
 
+=======
+exports.login = async function(req, res){
+	try{
+		const user = req.body.user
+		if(!user){
+			res.send(JSON.stringify({
+				status: 400,
+				message: "No user object specified"
+			}))
+		} else{
+			const login = await userSerice.login(user)
+			if(login.status === "Good"){
+				res.send(JSON.stringify({
+					status: 200,
+					message: login.message,
+					data: login.token
+				}))
+			} else {
+				res.send(JSON.stringify({
+					status: 500,
+					message: "There was a login error"
+				}))
+			}
+		}
+	}
+
+	catch(err){
+		res.send(JSON.stringify({
+			status: 400,
+			message: err.message
+		}));
+	}
+}
+>>>>>>> Stashed changes
 
 exports.manageStatus = async function(req, res){
 	try{
