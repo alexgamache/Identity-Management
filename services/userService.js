@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken')
 exports.register = async function(userObj){
     try{
 		const mysql = require('../helpers/db').mysql
+		await mysql.query("insert into user (fname, lname, email, is_admin, username) Values(?,?,?,?,?)", [userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
 
 		const checkIfExists = await mysql.query("Select * from user where email = ?", [userObj.email])
 		if(checkIfExists.length){
@@ -14,7 +15,6 @@ exports.register = async function(userObj){
 				 token: null
 			 }
 		}
-		await mysql.query("insert into user (fname, lname, email, is_admin) Values(?,?,?,?)", [userObj.fname, userObj.lname, userObj.email, 0])
 		
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
 		await mysql.end()
@@ -53,6 +53,37 @@ exports.lockAccount = async function(id, task){
 		return {
 			status: "Done",
 			message: `user account successfully ${task}ed`
+		}
+	}
+	catch(err){
+		return {
+			status: "error",
+			message: err.message
+		}
+	}
+}
+exports.login = async function(user, pass){
+	try{
+		const mysql = require('../helpers/db').mysql
+		let checkIfExists = await mysql.query("select * from user where username = ?", [user])
+		if(!checkIfExists.length){
+			return {
+				status: "error",
+				message: "User not found"
+			}
+		}
+		if(checkIfExists[0].password === pass){
+			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+			return {
+				status: "good",
+				message: token
+			}
+		}
+		else{
+			return{
+				status: "error",
+				message: "Unauthorised"
+			}
 		}
 	}
 	catch(err){
