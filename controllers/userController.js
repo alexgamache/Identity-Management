@@ -65,3 +65,27 @@ exports.manageStatus = async function(req, res){
 		})
 	}
 }
+exports.login = async function(req, res){
+	let username = req.body.username
+	let pass = req.body.password
+
+	if(!username || !pass){
+		res.send({
+			status: 400,
+			message: "Username and password are required"
+		})
+	}
+	let result = await userService.login(username, pass)
+	if(result.status === "error"){
+		res.send({
+			status: 401,
+			message: result.message
+		})
+	}
+	else {
+		res.send({
+			status: 200,
+			message: result.message
+		})
+	}
+}

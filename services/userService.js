@@ -62,3 +62,34 @@ exports.lockAccount = async function(id, task){
 		}
 	}
 }
+exports.login = async function(user, pass){
+	try{
+		const mysql = require('../helpers/db').mysql
+		let checkIfExists = await mysql.query("select * from user where username = ?", [user])
+		if(!checkIfExists.length){
+			return {
+				status: "error",
+				message: "User not found"
+			}
+		}
+		if(checkIfExists[0].password === pass){
+			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+			return {
+				status: "good",
+				message: token
+			}
+		}
+		else{
+			return{
+				status: "error",
+				message: "Unauthorised"
+			}
+		}
+	}
+	catch(err){
+		return {
+			status: "error",
+			message: err.message
+		}
+	}
+}

@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 app.get('/', example.test)
 app.post('/register', user.register)
 app.post('/manage', user.manageStatus)
+app.post('/login', user.login)
 
 //listen on the url
 app.listen(port, () => {
