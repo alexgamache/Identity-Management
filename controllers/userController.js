@@ -1,5 +1,7 @@
 //userController
 const userService = require('../services/userService')
+// const Uploader = require('../services/Uploader.js')
+
 
 exports.register = async function(req, res){
     try{
@@ -33,6 +35,7 @@ exports.register = async function(req, res){
 		})
     }
 }
+
 
 exports.manageStatus = async function(req, res){
 	try{
@@ -89,3 +92,34 @@ exports.login = async function(req, res){
 		})
 	}
 }
+
+
+
+
+
+exports.upload = async (req, res) => {
+    try {
+        if(!req.files) {
+            res.send({
+                status: false,
+                message: 'No file was uploaded!'
+            });
+        } else {
+ 
+            let face = req.files.face;
+            
+
+            face.mv('./uploads/' + face.name);
+
+            res.send({
+                status: true,
+                message: 'The file was uloaded sucessfuly!',
+                data: {
+                    name: face.name,
+                }
+            });
+        }
+    } catch (err) {
+        res.status(500).send(err);
+    }
+};

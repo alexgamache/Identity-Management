@@ -1,6 +1,9 @@
 //userService
 const sendmail = require('../helpers/sendMail').sendMail
 var jwt = require('jsonwebtoken')
+var multer = require('multer');
+// const Uploader = require ('../bin/Uploader.js');
+
 
 exports.register = async function(userObj){
     try{
@@ -36,6 +39,7 @@ exports.register = async function(userObj){
     }
 }
 
+
 exports.lockAccount = async function(id, task){
 	try{
 		const mysql = require('../helpers/db').mysql
@@ -62,6 +66,7 @@ exports.lockAccount = async function(id, task){
 		}
 	}
 }
+
 exports.login = async function(user, pass){
 	try{
 		const mysql = require('../helpers/db').mysql
