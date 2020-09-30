@@ -4,13 +4,14 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const port = 80
-var multer = require('multer');
+const multer = require('multer');
 const fileUpload = require('express-fileupload');
 
 //Import controllers here
 const example = require('./controllers/example')
 const user = require('./controllers/userController')
 
+//add middleware here
 app.use(bodyParser.json())
 app.use(fileUpload({
 	createParentPath: true
