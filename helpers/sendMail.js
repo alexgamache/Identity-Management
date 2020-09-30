@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 function sendEmailNotification(userName){
 
   const mailOptions = {
-    from: 'xxxx@gmail.com',d
+    from: 'xxxx@gmail.com',
     to: toEmail,
     subject: 'Email Verification',
     text: `Thank you for registering our website!`
