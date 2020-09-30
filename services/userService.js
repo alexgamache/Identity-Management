@@ -1,11 +1,14 @@
 //userService
 const sendmail = require('../helpers/sendMail').sendMail
 var jwt = require('jsonwebtoken')
+var multer = require('multer');
+// const Uploader = require ('../bin/Uploader.js');
+
 
 exports.register = async function(userObj){
     try{
 		const mysql = require('../helpers/db').mysql
-		await mysql.query("insert into user (fname, lname, email, is_admin, username) Values(?,?,?,?,?)", [userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
+		await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
 
 		const checkIfExists = await mysql.query("Select * from user where email = ?", [userObj.email])
 		if(checkIfExists.length){
@@ -36,6 +39,7 @@ exports.register = async function(userObj){
     }
 }
 
+
 exports.lockAccount = async function(id, task){
 	try{
 		const mysql = require('../helpers/db').mysql
@@ -62,6 +66,7 @@ exports.lockAccount = async function(id, task){
 		}
 	}
 }
+
 exports.login = async function(user, pass){
 	try{
 		const mysql = require('../helpers/db').mysql
