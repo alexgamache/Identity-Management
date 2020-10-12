@@ -93,10 +93,6 @@ exports.login = async function(req, res){
 	}
 }
 
-
-
-
-
 exports.upload = async (req, res) => {
     try {
         if(!req.files) {
