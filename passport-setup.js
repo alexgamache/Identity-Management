@@ -12,7 +12,8 @@ passport.serializeUser(function(user, cb) {
 });
 
 passport.use(new GoogleStrategy({
-    clientID: "712277424864-1nrsmqtojur275air8lsc0pqalll7jqj.apps.googleusercontent.com",
+    // clientID: "712277424864-1nrsmqtojur275air8lsc0pqalll7jqj.apps.googleusercontent.com", //Web Client (uncomment this line to test on web server)
+    clientID: "712277424864-ueco7jolgtd6p43fdlfdpokqsotajsvr.apps.googleusercontent.com", //Android Client 
     clientSecret: "_ti_jhR1ClKvmLE4TiuXOp-d",
     callbackURL: "http://localhost:80/google/callback"
   },
@@ -22,3 +23,4 @@ passport.use(new GoogleStrategy({
     return done(null, profile);
   }
 ));
+
