@@ -7,7 +7,7 @@ const app = express()
 const port = 80
 const multer = require('multer');
 const fileUpload = require('express-fileupload');
-
+const auth = require("./helpers/token")
 const passport = require('passport');
 require('./passport-setup');
 
@@ -17,6 +17,27 @@ const user = require('./controllers/userController')
 const google = require('./controllers/oauthController')
 
 //add middleware here
+app.use(async function (req, res, next) {
+  if (req.originalUrl === '/login' || req.originalUrl === '/register') {
+    return next();
+  }
+  else{
+    if (!req.headers.authorization) {
+      return res.status(403).json({ error: 'No credentials sent! Send Jwt in authorization' });
+    }
+    else{
+      let isAuthorized = await auth.verify(req.headers.authorization)
+      if(isAuthorized){
+        return next()
+      }
+      else{
+        return res.status(401).json({ error: 'Not Authorized' });
+      }
+    }
+  }
+})
+
+
 app.use(bodyParser.json())
 app.use(fileUpload({
   createParentPath: true
