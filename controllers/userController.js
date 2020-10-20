@@ -5,6 +5,7 @@ const userService = require('../services/userService')
 
 exports.register = async function(req, res){
     try{
+    	console.log("registration attempt");
 		const user = req.body.user
 		if(!user){
 			res.send({
@@ -99,27 +100,38 @@ exports.login = async function(req, res){
 
 exports.upload = async (req, res) => {
     try {
+    	let file = req.files.file;
+    	let type = file.name;
+    	let username = req.body.username;
+    	console.log(username);
         if(!req.files) {
+        	console.log("no file upload");
             res.send({
-                status: false,
+                status: 400,
                 message: 'No file was uploaded!'
+                
             });
         } else {
- 
-            let face = req.files.face;
-            
-
-            face.mv('./uploads/' + face.name);
-
-            res.send({
-                status: true,
-                message: 'The file was uloaded sucessfuly!',
-                data: {
-                    name: face.name,
-                }
-            });
+ 			const uploading = await userService.upload(file, type, username);
+ 			if(uploading.status === 200) {
+ 				console.log("userservice good");
+ 				res.send({
+ 					status: 200,
+ 					data: req.body.username
+ 				})
+ 			} else {
+ 				console.log("userservice 500")
+ 				res.send({
+ 					status: 500,
+ 					message: uploading.message
+ 				})
+ 			}
         }
     } catch (err) {
-        res.status(500).send(err);
+    	console.log("we bad");
+        res.send({
+        	status: 400,
+        	message: err.message
+        });
     }
 };

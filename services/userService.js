@@ -8,7 +8,6 @@ var multer = require('multer');
 exports.register = async function(userObj){
     try{
 		const mysql = require('../helpers/db').mysql
-		await mysql.query("insert into user (fname, lname, email, is_admin, username) Values(?,?,?,?,?)", [userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
 
 		const checkIfExists = await mysql.query("Select * from user where email = ?", [userObj.email])
 		if(checkIfExists.length){
@@ -17,12 +16,15 @@ exports.register = async function(userObj){
 				 message: "User already exists",
 				 token: null
 			 }
+		} else {
+			await mysql.query("insert into user (fname, lname, email, is_admin) Values(?,?,?,?)", [userObj.fname, userObj.lname, userObj.email, 0])
 		}
-		
+
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
 		await mysql.end()
-		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		await sendmail(userObj.email)
+		const token = await jwt.sign({user: dbObj[0]}, 'secret');
+		// const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
+		// await sendmail(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
@@ -31,6 +33,7 @@ exports.register = async function(userObj){
 		}
     }
     catch(err){
+
 		return {
 			status: "bad",
 			message: err.message,
@@ -95,6 +98,31 @@ exports.login = async function(user, pass){
 		return {
 			status: "error",
 			message: err.message
+		}
+	}
+}
+
+exports.upload = async function(file, type, username){
+	console.log(0);
+	try{
+
+            console.log(1);
+
+            file.mv('./uploads/' + username + '/' + type);
+            console.log(2);
+            return({
+                status: 200,
+                message: 'The file was uloaded sucessfuly!',
+                data: {
+                    name: type
+                }
+            });
+	}
+	catch(err){
+		console.log("service bad")
+		return {
+			status: "error",
+			message:err.message
 		}
 	}
 }
