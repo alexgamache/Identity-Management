@@ -2,6 +2,7 @@
 const sendmail = require('../helpers/sendMail').sendMail
 var jwt = require('jsonwebtoken')
 var multer = require('multer');
+var facialRecognition = require('./facialRecognition')
 // const Uploader = require ('../bin/Uploader.js');
 
 
@@ -102,7 +103,7 @@ exports.login = async function(user, pass){
 	}
 }
 
-exports.upload = async function(file, type, username){
+exports.create = async function(file, type, username){
 	console.log(0);
 	try{
 
@@ -126,3 +127,33 @@ exports.upload = async function(file, type, username){
 		}
 	}
 }
+
+
+
+exports.authenticate = async function(file, type, username){
+	try{
+			file.mv('./authentication/user.png')
+			var faceInput = await facialRecognition.checkFace(file, username);
+            if(faceInput.status === 'success') {
+            	return({
+                	status: 200,
+                	message: faceInput.message,
+                	data: {
+                    	name: type
+                		}
+            		})
+            	} else {
+            		return {
+            			status: 500,
+            			message: faceInput.message
+            		}
+            	}
+		}catch(err){
+
+		return {
+			status: "error",
+			message: err.message
+		}
+	}
+}
+

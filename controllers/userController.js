@@ -101,9 +101,11 @@ exports.login = async function(req, res){
 exports.upload = async (req, res) => {
     try {
     	let file = req.files.file;
-    	let type = file.name;
+    	let type = req.body.type;
     	let username = req.body.username;
+    	let method = req.body.method;
     	console.log(username);
+    	console.log(type);
         if(!req.files) {
         	console.log("no file upload");
             res.send({
@@ -112,26 +114,45 @@ exports.upload = async (req, res) => {
                 
             });
         } else {
- 			const uploading = await userService.upload(file, type, username);
- 			if(uploading.status === 200) {
- 				console.log("userservice good");
- 				res.send({
- 					status: 200,
- 					data: req.body.username
- 				})
- 			} else {
- 				console.log("userservice 500")
- 				res.send({
- 					status: 500,
- 					message: uploading.message
- 				})
- 			}
+        	if(method == 'create') {
+        		const creating = await userService.create(file, type, username);
+	 			if(creating.status === 200) {
+	 				res.send({
+	 					status: 200,
+	 					data: req.body.username,
+	 					message: creating.message
+	 				})
+	 			} else {
+	 				console.log("userservice 500")
+	 				res.send({
+	 					status: 500,
+	 					message: creating.message
+	 				})
+	 			}
+        	} 
+        	else if(method == 'authenticate') {
+        		const authenticating = await userService.authenticate(file, type, username);
+	 			if(authenticating.status === 200) {
+	 				res.send({
+	 					status: 200,
+	 					data: req.body.username,
+	 					message: authenticating.message
+	 				})
+	 			} else {
+	 				res.send({
+	 					status: 500,
+	 					message: authenticating.message
+	 				})
+	 			}
+        	}	
         }
     } catch (err) {
-    	console.log("we bad");
         res.send({
         	status: 400,
         	message: err.message
         });
     }
 };
+
+
+

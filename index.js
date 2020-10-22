@@ -1,10 +1,10 @@
 //Basic server setup
+require('@tensorflow/tfjs');
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
-const port = 80
-var multer = require('multer');
+const port = 8080
 const fileUpload = require('express-fileupload');
 
 //Import controllers here
