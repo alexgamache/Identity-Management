@@ -88,7 +88,8 @@ exports.login = async function(req, res){
 	else {
 		res.send({
 			status: 200,
-			message: result.message
+			message: result.message,
+			userID: result.userID
 		})
 	}
 }
