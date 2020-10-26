@@ -81,7 +81,8 @@ exports.login = async function(user, pass){
 			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
 			return {
 				status: "good",
-				message: token
+				message: token,
+				userID: checkIfExists[0].id
 			}
 		}
 		else{
