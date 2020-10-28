@@ -8,6 +8,8 @@ var facialRecognition = require('./facialRecognition')
 exports.register = async function(userObj){
     try{
 		const mysql = require('../helpers/db').mysql
+		await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
+
 
 		const checkIfExists = await mysql.query("Select * from user where email = ?", [userObj.email])
 		if(checkIfExists.length){
@@ -84,7 +86,8 @@ exports.login = async function(user, pass){
 			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
 			return {
 				status: "good",
-				message: token
+				message: token,
+				userID: checkIfExists[0].id
 			}
 		}
 		else{
@@ -100,6 +103,7 @@ exports.login = async function(user, pass){
 			message: err.message
 		}
 	}
+
 }
 
 exports.create = async function(file, type, username){
