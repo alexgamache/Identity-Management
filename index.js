@@ -1,11 +1,13 @@
 //index.js
 //Basic server setup
+require('@tensorflow/tfjs');
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
+
+const fs = require('fs');
 const port = 80
-const multer = require('multer');
 const fileUpload = require('express-fileupload');
 const auth = require("./helpers/token")
 
@@ -36,7 +38,9 @@ app.use(async function (req, res, next) {
 
 app.use(bodyParser.json())
 app.use(fileUpload({
-    createParentPath: true
+	createParentPath: true,
+	saveFileNames: true,
+	preserveExtension: true
 }));
 
 //link endpoints to controller functions here

@@ -5,6 +5,7 @@ const userService = require('../services/userService')
 
 exports.register = async function(req, res){
     try{
+    	console.log("registration attempt");
 		const user = req.body.user
 		if(!user){
 			res.send({
@@ -96,27 +97,57 @@ exports.login = async function(req, res){
 
 exports.upload = async (req, res) => {
     try {
+    	let file = req.files.file;
+    	let type = req.body.type;
+    	let username = req.body.username;
+    	let method = req.body.method;
+    	console.log(req.files);
         if(!req.files) {
+        	console.log("no file upload");
             res.send({
-                status: false,
-                message: 'No file was uploaded!'
+                status: 400,
+                message: 'No file was uploaded!'     
             });
         } else {
- 
-            let face = req.files.face;
-            
-
-            face.mv('./uploads/' + face.name);
-
-            res.send({
-                status: true,
-                message: 'The file was uloaded sucessfuly!',
-                data: {
-                    name: face.name,
-                }
-            });
+        	if(method == 'create') {
+        		const creating = await userService.create(file, type, username);
+	 			if(creating.status === 200) {
+	 				res.send({
+	 					status: 200,
+	 					data: req.body.username,
+	 					message: creating.message
+	 				})
+	 			} else {
+	 				console.log("userservice 500")
+	 				res.send({
+	 					status: 500,
+	 					message: creating.message
+	 				})
+	 			}
+        	} 
+        	else if(method == 'authenticate') {
+        		const authenticating = await userService.authenticate(file, type, username);
+	 			if(authenticating.status === 200) {
+	 				res.send({
+	 					status: 200,
+	 					data: req.body.username,
+	 					message: authenticating.message
+	 				})
+	 			} else {
+	 				res.send({
+	 					status: 500,
+	 					message: authenticating.message
+	 				})
+	 			}
+        	}	
         }
     } catch (err) {
-        res.status(500).send(err);
+        res.send({
+        	status: 400,
+        	message: err.message
+        });
     }
 };
+
+
+
