@@ -1,9 +1,8 @@
 //userService
 const sendmail = require('../helpers/sendMail').sendMail
 var jwt = require('jsonwebtoken')
-var multer = require('multer');
 var facialRecognition = require('./facialRecognition')
-// const Uploader = require ('../bin/Uploader.js');
+
 
 
 exports.register = async function(userObj){
@@ -104,13 +103,11 @@ exports.login = async function(user, pass){
 }
 
 exports.create = async function(file, type, username){
-	console.log(0);
+	console.log(username);
 	try{
-
-            console.log(1);
-
-            file.mv('./uploads/' + username + '/' + type);
-            console.log(2);
+			const filename = file.name;
+			const extension = filename.substring(filename.lastIndexOf("."));
+            file.mv('./uploads/' + username + '/' + type + '/1' + extension);
             return({
                 status: 200,
                 message: 'The file was uloaded sucessfuly!',
@@ -120,7 +117,6 @@ exports.create = async function(file, type, username){
             });
 	}
 	catch(err){
-		console.log("service bad")
 		return {
 			status: "error",
 			message:err.message
@@ -132,7 +128,9 @@ exports.create = async function(file, type, username){
 
 exports.authenticate = async function(file, type, username){
 	try{
-			file.mv('./authentication/user.png')
+			const filename = file.name;
+			const extension = filename.substring(filename.lastIndexOf("."));
+			file.mv('./authentication/1' + extension)
 			var faceInput = await facialRecognition.checkFace(file, username);
             if(faceInput.status === 'success') {
             	return({

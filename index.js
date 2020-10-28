@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const port = 8080
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
 
 //Import controllers here
 const example = require('./controllers/example')
@@ -13,7 +14,9 @@ const user = require('./controllers/userController')
 
 app.use(bodyParser.json())
 app.use(fileUpload({
-	createParentPath: true
+	createParentPath: true,
+	saveFileNames: true,
+	preserveExtension: true
 }));
 
 //link endpoints to controller functions here

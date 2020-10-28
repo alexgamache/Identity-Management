@@ -104,14 +104,12 @@ exports.upload = async (req, res) => {
     	let type = req.body.type;
     	let username = req.body.username;
     	let method = req.body.method;
-    	console.log(username);
-    	console.log(type);
+    	console.log(req.files);
         if(!req.files) {
         	console.log("no file upload");
             res.send({
                 status: 400,
-                message: 'No file was uploaded!'
-                
+                message: 'No file was uploaded!'     
             });
         } else {
         	if(method == 'create') {
