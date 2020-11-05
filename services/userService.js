@@ -8,8 +8,6 @@ var facialRecognition = require('./facialRecognition')
 exports.register = async function(userObj){
     try{
 		const mysql = require('../helpers/db').mysql
-		await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
-
 
 		const checkIfExists = await mysql.query("Select * from user where email = ?", [userObj.email])
 		if(checkIfExists.length){
@@ -19,14 +17,14 @@ exports.register = async function(userObj){
 				 token: null
 			 }
 		} else {
-			await mysql.query("insert into user (fname, lname, email, is_admin) Values(?,?,?,?)", [userObj.fname, userObj.lname, userObj.email, 0])
+			await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
 		}
 
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
 		await mysql.end()
-		const token = await jwt.sign({user: dbObj[0]}, 'secret');
-		// const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		// await sendmail(userObj.email)
+		//const token = await jwt.sign({user: dbObj[0]}, 'secret');
+		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
+		//await sendmail(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
