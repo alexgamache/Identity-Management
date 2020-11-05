@@ -17,7 +17,8 @@ const user = require('./controllers/userController')
 
 //add middleware here
 app.use(async function (req, res, next) {
-  if (req.originalUrl === '/login' || req.originalUrl === '/register') {
+
+  if (req.originalUrl === '/login' || req.originalUrl === '/register' || req.originalUrl === "/upload") {
     return next();
   }
   else{
