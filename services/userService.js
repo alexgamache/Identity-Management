@@ -73,6 +73,7 @@ exports.login = async function(user, pass){
 	try{
 		const mysql = require('../helpers/db').mysql
 		let checkIfExists = await mysql.query("select * from user where username = ?", [user])
+		await mysql.end()
 		if(!checkIfExists.length){
 			return {
 				status: "error",
@@ -134,14 +135,24 @@ exports.authenticate = async function(file, type, username){
 			file.mv('./authentication/1' + extension)
 			var faceInput = await facialRecognition.checkFace(file, username);
             if(faceInput.status === 'success') {
+				let token = ""
+				const mysql = require('../helpers/db').mysql
+				let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+				await mysql.end()
+				if(checkIfExists.length){
+					token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+				}
+				
             	return({
                 	status: 200,
-                	message: faceInput.message,
+					message: faceInput.message,
+					token: token,
                 	data: {
                     	name: type
                 		}
             		})
-            	} else {
+				} 
+			else {
             		return {
             			status: 500,
             			message: faceInput.message
