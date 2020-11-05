@@ -17,23 +17,15 @@ exports.register = async function(userObj){
 				 token: null
 			 }
 		} else {
-<<<<<<< HEAD
+		    
 			await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
-=======
-			await await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
->>>>>>> 5162a868590564226c75ffe93645286e22c8d453
 		}
 
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
-		await mysql.end()
-<<<<<<< HEAD
-		//const token = await jwt.sign({user: dbObj[0]}, 'secret');
+	await mysql.end()
+	
 		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
 		//await sendmail(userObj.email)
-=======
-		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		// await sendmail(userObj.email)
->>>>>>> 5162a868590564226c75ffe93645286e22c8d453
 		return {
 			status: "Good",
 			message: "user registered successfully",
