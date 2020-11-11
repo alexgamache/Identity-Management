@@ -131,7 +131,9 @@ exports.upload = async (req, res) => {
 	 				res.send({
 	 					status: 200,
 	 					data: req.body.username,
-	 					message: authenticating.message
+						message: authenticating.message,
+						token: authenticating.token
+
 	 				})
 	 			} else {
 	 				res.send({
