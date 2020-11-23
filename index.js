@@ -50,6 +50,7 @@ app.post('/register', user.register)
 app.post('/manage', user.manageStatus)
 app.post('/upload', user.upload)
 app.post('/login', user.login)
+app.post('/voice', user.voice)
 
 //listen on the url
 app.listen(port, () => {

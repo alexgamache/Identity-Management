@@ -169,3 +169,12 @@ exports.authenticate = async function(file, type, username){
 	}
 }
 
+exports.voiceRecog = async function(file, username){
+	let token = ""
+	const mysql = require('../helpers/db').mysql
+	let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+	await mysql.end()
+	if(checkIfExists.length){
+		token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+	}
+}

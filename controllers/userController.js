@@ -37,6 +37,18 @@ exports.register = async function(req, res){
     }
 }
 
+exports.voice = async function(req, res){
+	try{
+		const file = req.body.file
+		await userService.voiceRecog(file, req.body.username)
+	}
+	catch(err){
+		res.send({
+			status: 400,
+			message: err.message
+		})
+	}
+}
 
 exports.manageStatus = async function(req, res){
 	try{
