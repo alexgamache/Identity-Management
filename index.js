@@ -49,6 +49,7 @@ app.get('/', example.test)
 app.post('/register', user.register)
 app.post('/manage', user.manageStatus)
 app.post('/upload', user.upload)
+app.post('/update', user.update)
 app.post('/login', user.login)
 app.post('/voice', user.voice)
 

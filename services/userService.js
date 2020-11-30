@@ -4,7 +4,6 @@ var jwt = require('jsonwebtoken')
 var facialRecognition = require('./facialRecognition')
 
 
-
 exports.register = async function(userObj){
     try{
 		const mysql = require('../helpers/db').mysql
@@ -104,6 +103,39 @@ exports.login = async function(user, pass){
 		}
 	}
 
+}
+
+exports.update = async function(id, userObj){
+    try{
+        const mysql = require('../helpers/db').mysql
+        if (userObj.email){
+            await mysql.query('update user set email = ? where id = ?', [userObj.email, id])
+        }if(userObj.password){
+            await mysql.query('update user set password = ? where id = ?', [userObj.password, id])
+        }if(userObj.fname){
+            await mysql.query('update user set fname = ? where id = ?', [userObj.fname, id])
+        }if(userObj.lname){
+            await mysql.query('update user set lname = ? where id = ?', [userObj.lname, id])
+        }else{
+            return {
+                status :"error",
+                message: "field not recognized"
+            }
+        }
+        const dbObj = await mysql.query("select * from user where id = ?", [id])
+        await mysql.end()
+        return {
+            status: "Done",
+            message: `user account successfully updated`,
+            user: dbObj
+        }
+    }
+    catch(err){
+        return {
+            status: "error",
+            message: err.message
+        }
+    }
 }
 
 exports.create = async function(file, type, username){
