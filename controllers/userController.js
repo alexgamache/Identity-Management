@@ -50,6 +50,33 @@ exports.voice = async function(req, res){
 	}
 }
 
+exports.update = async function(req, res) {
+    try {
+        console.log("update attempt");
+        const user = req.body.user
+        const userID = req.body.id
+        if(!user){
+            res.send({
+                status: 400,
+                message: "No user object specified"
+            })
+        }else{
+            const updated = await userService.update(userID, user)
+            res.send({
+                status: 200,
+                message: updated.message,
+                user: updated.user
+            })
+        }
+    }
+    catch(err){
+        res.send({
+            status: 400,
+            message: err.message
+        })
+    }
+}
+
 exports.manageStatus = async function(req, res){
 	try{
 		const task = req.body.task
