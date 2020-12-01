@@ -15,13 +15,6 @@ exports.upload = async function upload(file, albumId){
 }
 
 exports.createAlbum = async function createAlbum(){
-    let response;
-    imgur.createAlbum()
-    .then(function(json) {
-        response = json
-    })
-    .catch(function (err) {
-        console.error(err.message);
-    });
+    let response = await imgur.createAlbum()
     return response
 }
