@@ -2,6 +2,9 @@
 const userService = require('../services/userService')
 // const Uploader = require('../services/Uploader.js')
 
+exports.cb = async function(test){
+	console.log(test)
+}
 
 exports.register = async function(req, res){
     try{

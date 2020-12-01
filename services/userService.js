@@ -1,6 +1,7 @@
 //userService
 const sendmail = require('../helpers/sendMail').sendMail
 var jwt = require('jsonwebtoken')
+const imgur = require('imgur');
 var facialRecognition = require('./facialRecognition')
 
 
@@ -210,3 +211,5 @@ exports.voiceRecog = async function(file, username){
 		token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
 	}
 }
+
+console.log("test")

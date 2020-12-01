@@ -52,6 +52,7 @@ app.post('/upload', user.upload)
 app.post('/update', user.update)
 app.post('/login', user.login)
 app.post('/voice', user.voice)
+app.post('/imgurCb', user.cb)
 
 //listen on the url
 app.listen(port, () => {
