@@ -1,6 +1,6 @@
 //index.js
 //Basic server setup
-require('@tensorflow/tfjs');
+require('@tensorflow/tfjs-node');
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
