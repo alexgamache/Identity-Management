@@ -22,6 +22,7 @@ async function sendEmailNotification(toEmail){
     to: toEmail,
     subject: 'Email Verification',
     text: `Thank you for registering our website!`
+
   };
 
   transporter.sendMail(mailOptions, function(error, info){
