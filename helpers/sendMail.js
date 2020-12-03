@@ -1,5 +1,6 @@
 //send email here
 //exports.sendMail = async function(email)
+
 const nodemailer = require('nodemailer');
 var toEmail = 'lpan@oakland.com';
 module.exports = Object.freeze({
@@ -12,6 +13,7 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: 'Lexyptest@gmail.com',
     pass: 'Qw12er34'
+
   }
 });
 
@@ -22,6 +24,7 @@ function sendEmailNotification(userName){
     to: toEmail,
     subject: 'Email Comfirmation',
     text: 'Thank you for registering our website!'
+
   };
 
   transporter.sendMail(mailOptions, function(error, info){

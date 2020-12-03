@@ -8,6 +8,7 @@ exports.verify = async function(token){
         return true
     }
     catch(err){
+	console.log(err);
         return false
     }
 }

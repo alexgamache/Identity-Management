@@ -1,11 +1,13 @@
 //userService
 const sendmail = require('../helpers/sendMail').sendMail
 var jwt = require('jsonwebtoken')
+const imgur = require('imgur');
+var facialRecognition = require('./facialRecognition')
+
 
 exports.register = async function(userObj){
     try{
 		const mysql = require('../helpers/db').mysql
-		await mysql.query("insert into user (fname, lname, email, is_admin, username) Values(?,?,?,?,?)", [userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
 
 		const checkIfExists = await mysql.query("Select * from user where email = ?", [userObj.email])
 		if(checkIfExists.length){
@@ -14,12 +16,16 @@ exports.register = async function(userObj){
 				 message: "User already exists",
 				 token: null
 			 }
+		} else {
+		    
+			await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
 		}
-		
+
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
-		await mysql.end()
+	await mysql.end()
+	
 		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		await sendmail(userObj.email)
+		//await sendmail(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
@@ -28,6 +34,7 @@ exports.register = async function(userObj){
 		}
     }
     catch(err){
+
 		return {
 			status: "bad",
 			message: err.message,
@@ -35,6 +42,7 @@ exports.register = async function(userObj){
 		}
     }
 }
+
 
 exports.lockAccount = async function(id, task){
 	try{
@@ -62,10 +70,12 @@ exports.lockAccount = async function(id, task){
 		}
 	}
 }
+
 exports.login = async function(user, pass){
 	try{
 		const mysql = require('../helpers/db').mysql
 		let checkIfExists = await mysql.query("select * from user where username = ?", [user])
+		await mysql.end()
 		if(!checkIfExists.length){
 			return {
 				status: "error",
@@ -76,7 +86,8 @@ exports.login = async function(user, pass){
 			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
 			return {
 				status: "good",
-				message: token
+				message: token,
+				userID: checkIfExists[0].id
 			}
 		}
 		else{
@@ -92,4 +103,113 @@ exports.login = async function(user, pass){
 			message: err.message
 		}
 	}
+
 }
+
+exports.update = async function(id, userObj){
+    try{
+        const mysql = require('../helpers/db').mysql
+        if (userObj.email){
+            await mysql.query('update user set email = ? where id = ?', [userObj.email, id])
+        }if(userObj.password){
+            await mysql.query('update user set password = ? where id = ?', [userObj.password, id])
+        }if(userObj.fname){
+            await mysql.query('update user set fname = ? where id = ?', [userObj.fname, id])
+        }if(userObj.lname){
+            await mysql.query('update user set lname = ? where id = ?', [userObj.lname, id])
+        }else{
+            return {
+                status :"error",
+                message: "field not recognized"
+            }
+        }
+        const dbObj = await mysql.query("select * from user where id = ?", [id])
+        await mysql.end()
+        return {
+            status: "Done",
+            message: `user account successfully updated`,
+            user: dbObj
+        }
+    }
+    catch(err){
+        return {
+            status: "error",
+            message: err.message
+        }
+    }
+}
+
+exports.create = async function(file, type, username){
+	console.log(username);
+	try{
+			const filename = file.name;
+			const extension = filename.substring(filename.lastIndexOf("."));
+            file.mv('./uploads/' + username + '/' + type + '/1' + extension);
+            return({
+                status: 200,
+                message: 'The file was uloaded sucessfuly!',
+                data: {
+                    name: type
+                }
+            });
+	}
+	catch(err){
+		return {
+			status: "error",
+			message:err.message
+		}
+	}
+}
+
+
+
+exports.authenticate = async function(file, type, username){
+	try{
+			const filename = file.name;
+			const extension = filename.substring(filename.lastIndexOf("."));
+			file.mv('./authentication/1' + extension)
+			var faceInput = await facialRecognition.checkFace(file, username);
+            if(faceInput.status === 'success') {
+				let token = ""
+				const mysql = require('../helpers/db').mysql
+				let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+				await mysql.end()
+				if(checkIfExists.length){
+					token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+				}
+				
+            	return({
+                	status: 200,
+					message: faceInput.message,
+					token: token,
+                	data: {
+                    	name: type
+                		}
+            		})
+				} 
+			else {
+            		return {
+            			status: 500,
+            			message: faceInput.message
+            		}
+            	}
+		}catch(err){
+
+		return {
+			status: "error",
+			message: err.message
+		}
+	}
+}
+
+exports.voiceRecog = async function(file, username){
+	let token = ""
+	const mysql = require('../helpers/db').mysql
+	let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+	await mysql.end()
+	if(checkIfExists.length){
+		token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+	}
+}
+
+console.log("test")

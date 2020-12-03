@@ -5,7 +5,7 @@ const mysql = require('serverless-mysql')({
 	  database : process.env.DATABASE,
 	  user     : process.env.USERNAME,
 	  password : process.env.PASSWORD
-  }
+	  	}
 })
 
 exports.mysql = mysql
