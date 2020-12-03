@@ -1,11 +1,5 @@
 //send email here
-//exports.sendMail = async function(email)
-
 const nodemailer = require('nodemailer');
-
-module.exports = Object.freeze({
-  sendEmailNotification
-});
 
 //Use gmail service
 const transporter = nodemailer.createTransport({
@@ -17,7 +11,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-async function sendEmailNotification(toEmail){
+exports.sendMail = async function(toEmail){
 
   const mailOptions = { //Email template
     from: 'Lexyptest@gmail.com',
