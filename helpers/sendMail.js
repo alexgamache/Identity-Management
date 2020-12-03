@@ -2,7 +2,7 @@
 //exports.sendMail = async function(email)
 
 const nodemailer = require('nodemailer');
-var toEmail = 'lpan@oakland.com';
+
 module.exports = Object.freeze({
   sendEmailNotification
 });
@@ -12,12 +12,12 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'Lexyptest@gmail.com',
-    pass: 'Qw12er34'
+    pass: 'lexypanQwer1234'
 
   }
 });
 
-function sendEmailNotification(userName){
+async function sendEmailNotification(toEmail){
 
   const mailOptions = { //Email template
     from: 'Lexyptest@gmail.com',
