@@ -2,7 +2,7 @@
 //exports.sendMail = async function(email)
 
 const nodemailer = require('nodemailer');
-var toEmail = 'someone@yahoo.com';
+
 module.exports = Object.freeze({
   sendEmailNotification
 });
@@ -10,18 +10,18 @@ module.exports = Object.freeze({
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'xxxx@gmail.com',
-    pass: 'yyyy'
+    user: 'lexyptest@gmail.com',
+    pass: 'lexypanQwer1234'
   }
 });
 
-function sendEmailNotification(userName){
+async function sendEmailNotification(toEmail){
 
   const mailOptions = {
-    from: 'xxxx@gmail.com',
+    from: 'lexyptest@gmail.com',
     to: toEmail,
     subject: 'Email Verification',
-    text: `Thank you for registering our website!`
+    text: `Thank you for registering our application!`
   };
 
   transporter.sendMail(mailOptions, function(error, info){

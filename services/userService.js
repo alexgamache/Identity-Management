@@ -1,5 +1,5 @@
 //userService
-const sendmail = require('../helpers/sendMail').sendMail
+const sendmail = require('../helpers/sendMail').sendMailNotification
 var jwt = require('jsonwebtoken')
 var facialRecognition = require('./facialRecognition')
 
@@ -24,7 +24,7 @@ exports.register = async function(userObj){
 	await mysql.end()
 	
 		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		//await sendmail(userObj.email)
+		await sendmail(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
