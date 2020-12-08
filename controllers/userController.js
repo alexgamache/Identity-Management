@@ -54,7 +54,7 @@ exports.voice = async function(req, res){
 }
 
 exports.users = function(req, res) {
-    const userList = await userService.users()
+    const userList = userService.users()
     res.send({
         user: userList.user
     })
