@@ -108,8 +108,8 @@ exports.login = async function(user, pass){
 
 exports.users = function() {
     const mysql = require('../helpers/db').mysql
-    let userList = await mysql.query('select * from user')
-    await mysql.end()
+    let userList = mysql.query('select * from user')
+    mysql.end()
 
     return {
         user: userList
