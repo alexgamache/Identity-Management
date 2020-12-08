@@ -65,6 +65,13 @@ exports.voice = async function(req, res){
 	}
 }
 
+exports.users = function(req, res) {
+    const userList = userService.users()
+    res.send({
+        user: userList.user
+    })
+}
+
 exports.update = async function(req, res) {
     try {
         console.log("update attempt");
