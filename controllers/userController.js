@@ -2,8 +2,20 @@
 const userService = require('../services/userService')
 // const Uploader = require('../services/Uploader.js')
 
-exports.cb = async function(test){
-	console.log(test)
+exports.getUsers = async function(req, res){
+	try{
+		const users = await userService.getUsers()
+		res.send({
+			status: 200,
+			message: users
+		})
+	}
+	catch(err){
+		res.send({
+			status: 400,
+			message: err.message
+		})
+    }
 }
 
 exports.register = async function(req, res){
