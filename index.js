@@ -46,6 +46,7 @@ app.use(fileUpload({
 
 //link endpoints to controller functions here
 app.get('/', example.test)
+app.get('/users', user.users)
 app.post('/register', user.register)
 app.post('/manage', user.manageStatus)
 app.post('/upload', user.upload)
