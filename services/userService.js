@@ -212,4 +212,20 @@ exports.voiceRecog = async function(file, username){
 	}
 }
 
-console.log("test")
+exports.getUsers = async function(){
+	try{
+		const mysql = require('../helpers/db').mysql
+		const query = await mysql.query('select * from user')
+		await mysql.end()
+		return {
+			message: "users retreived successfully",
+			data: query
+		}
+	}
+	catch(err){
+		return{
+			message: err,
+			data: null
+		}
+	}
+}
