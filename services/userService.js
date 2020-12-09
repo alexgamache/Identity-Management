@@ -106,16 +106,6 @@ exports.login = async function(user, pass){
 
 }
 
-exports.users = function() {
-    const mysql = require('../helpers/db').mysql
-    let userList = mysql.query('select * from user')
-    mysql.end()
-
-    return {
-        user: userList
-    }
-}
-
 exports.update = async function(id, userObj){
     try{
         const mysql = require('../helpers/db').mysql
