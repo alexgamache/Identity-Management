@@ -96,7 +96,7 @@ exports.manageStatus = async function(req, res){
 	try{
 		const task = req.body.task
 		const user = req.body.id
-		if(!task || !id){
+		if(!task || !user){
 			res.send({
 				status: 400,
 				message: "This endpoint requires both task and id. One of those were missing check data for what was received",

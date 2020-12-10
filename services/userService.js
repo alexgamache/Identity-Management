@@ -3,6 +3,7 @@ const sendmail = require('../helpers/sendMail').sendMailNotification
 var jwt = require('jsonwebtoken')
 const imgur = require('imgur');
 var facialRecognition = require('./facialRecognition')
+var speechVerify = require('./speechVerify')
 
 
 exports.register = async function(userObj){
@@ -168,31 +169,40 @@ exports.authenticate = async function(file, type, username){
 			const filename = file.name;
 			const extension = filename.substring(filename.lastIndexOf("."));
 			file.mv('./authentication/1' + extension)
-			var faceInput = await facialRecognition.checkFace(file, username);
-            if(faceInput.status === 'success') {
-				let token = ""
-				const mysql = require('../helpers/db').mysql
-				let checkIfExists = await mysql.query("select * from user where username = ?", [username])
-				await mysql.end()
-				if(checkIfExists.length){
-					token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
-				}
-				
-            	return({
-                	status: 200,
-					message: faceInput.message,
-					token: token,
-                	data: {
-                    	name: type
-                		}
-            		})
-				} 
-			else {
-            		return {
-            			status: 500,
-            			message: faceInput.message
-            		}
-            	}
+			if(type == "face") {
+				var faceInput = await facialRecognition.checkFace(file, username);
+	            if(faceInput.status === 'success') {
+	            	return({
+	                	status: 200,
+	                	message: faceInput.message,
+	                	data: {
+	                    	name: type
+	                		}
+	            		})
+	            	} else {
+	            		return {
+	            			status: 500,
+	            			message: faceInput.message
+	            		}
+	            	}
+			} else if(type == "voice") {
+				var voiceInput = await speechVerify.checkVoice(file, username);
+				if(voiceInput.status === 'success') {
+	            	return({
+	                	status: 200,
+	                	message: voiceInput.message,
+	                	data: {
+	                    	name: type
+	                		}
+	            		})
+	            	} else {
+	            		return {
+	            			status: 500,
+	            			message: voiceInput.message
+	            		}
+	            	}
+			}
+    
 		}catch(err){
 
 		return {
