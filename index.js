@@ -1,6 +1,6 @@
 //index.js
 //Basic server setup
-require('@tensorflow/tfjs');
+require('@tensorflow/tfjs-node');
 require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -17,7 +17,8 @@ const user = require('./controllers/userController')
 
 //add middleware here
 app.use(async function (req, res, next) {
-  if (req.originalUrl === '/login' || req.originalUrl === '/register') {
+
+  if (req.originalUrl === '/login' || req.originalUrl === '/register' || req.originalUrl === "/upload") {
     return next();
   }
   else{
@@ -48,7 +49,10 @@ app.get('/', example.test)
 app.post('/register', user.register)
 app.post('/manage', user.manageStatus)
 app.post('/upload', user.upload)
+app.post('/update', user.update)
 app.post('/login', user.login)
+app.post('/voice', user.voice)
+app.get('/users', user.getUsers)
 
 //listen on the url
 app.listen(port, () => {

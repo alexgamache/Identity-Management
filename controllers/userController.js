@@ -2,6 +2,21 @@
 const userService = require('../services/userService')
 // const Uploader = require('../services/Uploader.js')
 
+exports.getUsers = async function(req, res){
+	try{
+		const users = await userService.getUsers()
+		res.send({
+			status: 200,
+			message: users
+		})
+	}
+	catch(err){
+		res.send({
+			status: 400,
+			message: err.message
+		})
+    }
+}
 
 exports.register = async function(req, res){
     try{
@@ -37,6 +52,45 @@ exports.register = async function(req, res){
     }
 }
 
+exports.voice = async function(req, res){
+	try{
+		const file = req.body.file
+		await userService.voiceRecog(file, req.body.username)
+	}
+	catch(err){
+		res.send({
+			status: 400,
+			message: err.message
+		})
+	}
+}
+
+exports.update = async function(req, res) {
+    try {
+        console.log("update attempt");
+        const user = req.body.user
+        const userID = req.body.id
+        if(!user){
+            res.send({
+                status: 400,
+                message: "No user object specified"
+            })
+        }else{
+            const updated = await userService.update(userID, user)
+            res.send({
+                status: 200,
+                message: updated.message,
+                user: updated.user
+            })
+        }
+    }
+    catch(err){
+        res.send({
+            status: 400,
+            message: err.message
+        })
+    }
+}
 
 exports.manageStatus = async function(req, res){
 	try{
@@ -131,7 +185,9 @@ exports.upload = async (req, res) => {
 	 				res.send({
 	 					status: 200,
 	 					data: req.body.username,
-	 					message: authenticating.message
+						message: authenticating.message,
+						token: authenticating.token
+
 	 				})
 	 			} else {
 	 				res.send({
