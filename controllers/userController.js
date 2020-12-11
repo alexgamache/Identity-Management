@@ -95,11 +95,11 @@ exports.update = async function(req, res) {
 exports.manageStatus = async function(req, res){
 	try{
 		const task = req.body.task
-		const user = req.body.id
+		const user = req.body.user
 		if(!task || !user){
 			res.send({
 				status: 400,
-				message: "This endpoint requires both task and id. One of those were missing check data for what was received",
+				message: "This endpoint requires both task and username. One of those were missing check data for what was received",
 				data: req.body
 			})
 		}

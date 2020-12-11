@@ -45,13 +45,13 @@ exports.register = async function(userObj){
 }
 
 
-exports.lockAccount = async function(id, task){
+exports.lockAccount = async function(user, task){
 	try{
 		const mysql = require('../helpers/db').mysql
 		if (task === "lock"){
-			await mysql.query('update user set isLocked = ? where id = ?', [1, id])
+			await mysql.query('update user set isLocked = ? where username = ?', [1, user])
 		}else if(task === "unlock"){
-			await mysql.query('update user set isLocked = ? where id = ?', [0, id])
+			await mysql.query('update user set isLocked = ? where username = ?', [0, user])
 		}else{
 			return {
 				status :"error",
