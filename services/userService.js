@@ -1,5 +1,5 @@
 //userService
-const sendmail = require('../helpers/sendMail').sendEmailNotification
+const {sendEmailNotification} = require('../helpers/sendMail')
 
 var jwt = require('jsonwebtoken')
 const imgur = require('imgur');
@@ -27,7 +27,7 @@ exports.register = async function(userObj){
 	await mysql.end()
 	
 		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		sendmail(userObj.email)
+		sendEmailNotification(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
