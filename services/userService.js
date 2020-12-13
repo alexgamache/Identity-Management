@@ -83,7 +83,7 @@ exports.login = async function(user, pass){
 				message: "User not found"
 			}
 		}
-		if(checkIfExists[0].password === pass){
+		if(checkIfExists[0].password === pass && checkIfExists[0].isLocked === 0) {
 			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
 			return {
 				status: "good",
