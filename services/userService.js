@@ -1,5 +1,6 @@
 //userService
 const sendmail = require('../helpers/sendMail').sendEmailNotification
+
 var jwt = require('jsonwebtoken')
 const imgur = require('imgur');
 var facialRecognition = require('./facialRecognition')
