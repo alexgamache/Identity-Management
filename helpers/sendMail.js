@@ -1,6 +1,10 @@
 //send email here
 const nodemailer = require('nodemailer');
 
+module.exports = Object.freeze({
+  sendEmailNotification
+});
+
 //Use gmail service
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -11,10 +15,10 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-exports.sendMail = async function(toEmail){
-
+//exports.sendMail = async function(toEmail){
+async function sendEmailNotification(toEmail){
   const mailOptions = { //Email template
-    from: 'Lexyptest@gmail.com',
+    from: 'CapID Team',
     to: toEmail,
     subject: 'Email Comfirmation',
     text: 'Thank you for registering our website!'
