@@ -11,7 +11,6 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: 'Lexyptest@gmail.com',
     pass: 'lexypanQwer1234'
-
   }
 });
 
@@ -22,7 +21,6 @@ function sendEmailNotification(toEmail){
     to: toEmail,
     subject: 'Email Comfirmation',
     text: 'Thank you for registering our website!'
-
   };
 
   transporter.sendMail(mailOptions, function(error, info){
