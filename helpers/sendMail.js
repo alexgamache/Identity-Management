@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 });
 
 //exports.sendMail = async function(toEmail){
-async function sendEmailNotification(toEmail){
+function sendEmailNotification(toEmail){
   const mailOptions = { //Email template
     from: 'CapID Team',
     to: toEmail,

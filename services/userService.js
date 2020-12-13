@@ -26,7 +26,7 @@ exports.register = async function(userObj){
 	await mysql.end()
 	
 		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		await sendmail(userObj.email)
+		sendmail(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
