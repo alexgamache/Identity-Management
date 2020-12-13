@@ -52,6 +52,10 @@ exports.lockAccount = async function(user, task){
 			await mysql.query('update user set isLocked = ? where username = ?', [1, user])
 		}else if(task === "unlock"){
 			await mysql.query('update user set isLocked = ? where username = ?', [0, user])
+		}else if(task === "grant"){
+			await mysql.query('update user set is_admin = ? where username = ?', [1, user])
+		}else if(task === "revoke"){
+			await mysql.query('update user set is_admin = ? where username = ?', [0, user])
 		}else{
 			return {
 				status :"error",
