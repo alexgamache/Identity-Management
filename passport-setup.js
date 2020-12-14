@@ -18,7 +18,7 @@ var INSTAGRAM_CLIENT_SECRET = process.env.INSTAGRAM_CLIENT_SECRET
   passport.use(new InstagramStrategy({
      clientID: INSTAGRAM_CLIENT_ID,
      clientSecret: INSTAGRAM_CLIENT_SECRET,
-     callbackURL: "http://localhost:80/auth/instagram/callback"
+     callbackURL: "https://3.128.46.46/"
    },
    function(accessToken, refreshToken, profile, done) {
        console.log("instagram based auth called");
