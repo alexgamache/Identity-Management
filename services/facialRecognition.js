@@ -21,7 +21,7 @@ exports.checkFace = async (file, username) => {
 		console.log(userFilename);
 		console.log(userFilename);
 		const userExtension = userFilename.substring(userFilename.lastIndexOf("."));
-		var user_dir = (process.env.LOCAL_DIR + '/uploads/' + username + '/face/1' + userExtension)
+		var user_dir = (process.env.LOCAL_DIR + 'uploads/' + username + '/face/1' + userExtension)
 		var stranger_dir = (process.env.LOCAL_DIR + 'authentication/1' + strangerExtension)
 		await faceapi.nets.ssdMobilenetv1.loadFromDisk('./models');
     	await faceapi.nets.faceRecognitionNet.loadFromDisk('./models');
