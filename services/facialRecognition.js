@@ -21,7 +21,7 @@ exports.checkFace = async (file, username) => {
 		console.log(userFilename);
 		console.log(userFilename);
 		const userExtension = userFilename.substring(userFilename.lastIndexOf("."));
-		var user_dir = (process.env.LOCAL_DIR + '/uploads/' + username + '/face/1' + userExtension)
+		var user_dir = (process.env.LOCAL_DIR + 'uploads/' + username + '/face/1' + userExtension)
 		var stranger_dir = (process.env.LOCAL_DIR + 'authentication/1' + strangerExtension)
 		await faceapi.nets.ssdMobilenetv1.loadFromDisk('./models');
     	await faceapi.nets.faceRecognitionNet.loadFromDisk('./models');
@@ -36,11 +36,13 @@ exports.checkFace = async (file, username) => {
 		.withFaceLandmarks().withFaceDescriptor()
 		const bestMatch = faceMatcher.findBestMatch(strangerDetections.descriptor)
 		if(bestMatch._label == username) {
+			console.log("good facial recognition");
 			return {
 				status: 'success',
 				message: 'good facial recognition'
 			}
 		} else {
+			console.log("bad facial recognition");
 			return {
 				status: 'failure',
 				message: 'bad facial recognition, try again'

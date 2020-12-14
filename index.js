@@ -22,7 +22,7 @@ const ig = require('./controllers/oauthController')
 //add middleware here
 app.use(async function (req, res, next) {
 
-  if (req.originalUrl === '/login' || req.originalUrl === '/register' || req.originalUrl === "/upload") {
+  if (req.originalUrl === '/login' || req.originalUrl === '/register' || req.originalUrl === "/upload" || req.originalUrl === "/instagram/callback" ||  req.originalUrl === "/instagram") {
     return next();
   }
   else{
@@ -61,7 +61,7 @@ app.post('/login', user.login)
 app.post('/voice', user.voice)
 app.get('/users', user.getUsers)
 
-app.get('/instagram', passport.authenticate('instagram', { scope: ['profile', 'email'] }))
+app.get('/instagram', passport.authenticate('instagram', { scope: ['user_profile','user_media'] }))
 app.get('/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/failed' }), ig.callback)
 app.get('/failed', ig.fail)
 
