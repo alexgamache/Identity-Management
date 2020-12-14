@@ -19,7 +19,7 @@ exports.register = async function(userObj){
 				 token: null
 			 }
 		} else {
-		    await bcrypt.hash(userObj.password, saltRounds, function(err, hash) {
+		    await bcrypt.hash(userObj.password, saltRounds, async function(err, hash) {
 				await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [hash, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
 			});
 			
@@ -90,7 +90,7 @@ exports.login = async function(user, pass){
 				message: "User not found"
 			}
 		}
-		await bcrypt.compare(pass, checkIfExists[0].password, function(err, result) {
+		await bcrypt.compare(pass, checkIfExists[0].password, async function(err, result) {
 			if(result && checkIfExists[0].isLocked === 0){
 				const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
 				return {
