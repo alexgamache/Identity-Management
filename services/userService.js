@@ -4,7 +4,8 @@ var jwt = require('jsonwebtoken')
 const imgur = require('imgur');
 var facialRecognition = require('./facialRecognition')
 var speechVerify = require('./speechVerify')
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 exports.register = async function(userObj){
     try{
@@ -18,8 +19,10 @@ exports.register = async function(userObj){
 				 token: null
 			 }
 		} else {
-		    
-			await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
+		    await bcrypt.hash(userObj.password, saltRounds, function(err, hash) {
+				await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [hash, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
+			});
+			
 		}
 
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
@@ -87,20 +90,22 @@ exports.login = async function(user, pass){
 				message: "User not found"
 			}
 		}
-		if(checkIfExists[0].password === pass && checkIfExists[0].isLocked === 0) {
-			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
-			return {
-				status: "good",
-				message: token,
-				userID: checkIfExists[0].id
+		await bcrypt.compare(pass, checkIfExists[0].password, function(err, result) {
+			if(result && checkIfExists[0].isLocked === 0){
+				const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+				return {
+					status: "good",
+					message: token,
+					userID: checkIfExists[0].id
+				}
 			}
-		}
-		else{
-			return{
-				status: "error",
-				message: "Unauthorised"
+			else{
+				return{
+					status: "error",
+					message: "Unauthorised"
+				}
 			}
-		}
+		});
 	}
 	catch(err){
 		return {
