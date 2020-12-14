@@ -11,9 +11,13 @@ const port = 80
 const fileUpload = require('express-fileupload');
 const auth = require("./helpers/token")
 
+const passport = require('passport');
+require('./passport-setup');
+
 //Import controllers here
 const example = require('./controllers/example')
 const user = require('./controllers/userController')
+const ig = require('./controllers/oauthController')
 
 //add middleware here
 app.use(async function (req, res, next) {
@@ -44,6 +48,9 @@ app.use(fileUpload({
 	preserveExtension: true
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 //link endpoints to controller functions here
 app.get('/', example.test)
 app.post('/register', user.register)
@@ -53,6 +60,10 @@ app.post('/update', user.update)
 app.post('/login', user.login)
 app.post('/voice', user.voice)
 app.get('/users', user.getUsers)
+
+app.get('/instagram', passport.authenticate('instagram', { scope: ['profile', 'email'] }))
+app.get('/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/failed' }), ig.callback)
+app.get('/failed', ig.fail)
 
 //listen on the url
 app.listen(port, () => {
