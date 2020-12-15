@@ -22,7 +22,7 @@ const ig = require('./controllers/oauthController')
 //add middleware here
 app.use(async function (req, res, next) {
 
-  if (req.originalUrl === '/login' || req.originalUrl === '/register' || req.originalUrl === "/upload") {
+  if (req.originalUrl === '/login' || req.originalUrl === '/register' || req.originalUrl === "/upload" || req.originalUrl === "/instagram/callback" ||  req.originalUrl === "/instagram") {
     return next();
   }
   else{

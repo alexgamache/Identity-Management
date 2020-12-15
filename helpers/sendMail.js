@@ -1,28 +1,26 @@
 //send email here
-//exports.sendMail = async function(email)
-
 const nodemailer = require('nodemailer');
 
 module.exports = Object.freeze({
   sendEmailNotification
 });
 
+//Use gmail service
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'lexyptest@gmail.com',
-    pass: 'lexypanQwer1234'
+    user: 'Lexyptest@gmail.com',
+    pass: 'llzbzauvxhaplker'
   }
 });
 
-async function sendEmailNotification(toEmail){
-
-  const mailOptions = {
-    from: 'lexyptest@gmail.com',
+//exports.sendMail = async function(toEmail){
+function sendEmailNotification(toEmail){
+  const mailOptions = { //Email template
+    from: 'CapID Team',
     to: toEmail,
-    subject: 'Email Verification',
-    text: `Thank you for registering our website!`
-
+    subject: 'Email Comfirmation',
+    text: 'Thank you for registering our website!'
   };
 
   transporter.sendMail(mailOptions, function(error, info){

@@ -1,10 +1,11 @@
 //userService
-const sendmail = require('../helpers/sendMail').sendMailNotification
+const sendMail = require('../helpers/sendMail').sendEmailNotification
 var jwt = require('jsonwebtoken')
 const imgur = require('imgur');
 var facialRecognition = require('./facialRecognition')
 var speechVerify = require('./speechVerify')
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 exports.register = async function(userObj){
     try{
@@ -18,15 +19,17 @@ exports.register = async function(userObj){
 				 token: null
 			 }
 		} else {
-		    
-			await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [userObj.password, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
+			bcrypt.hash(userObj.password, saltRounds, async function(err, hash) {
+				await mysql.query("insert into user (password, fname, lname, email, is_admin, username) Values(?,?,?,?,?,?)", [hash, userObj.fname, userObj.lname, userObj.email, 0, userObj.username])
+			});
+			
 		}
 
 		const dbObj = await mysql.query("select * from user where email = ?", [userObj.email])
 	await mysql.end()
 	
 		const token = await jwt.sign({user: dbObj[0]}, process.env.SECRET);
-		await sendmail(userObj.email)
+		sendMail(userObj.email)
 		return {
 			status: "Good",
 			message: "user registered successfully",
@@ -87,13 +90,15 @@ exports.login = async function(user, pass){
 				message: "User not found"
 			}
 		}
-		if(checkIfExists[0].password === pass && checkIfExists[0].isLocked === 0) {
+		const match = await bcrypt.compare(pass, checkIfExists[0].password);
+ 
+		if(match && checkIfExists[0].isLocked === 0) {
 			const token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
-			return {
-				status: "good",
-				message: token,
-				userID: checkIfExists[0].id
-			}
+				return {
+					status: "good",
+					message: token,
+					userID: checkIfExists[0].id
+				}
 		}
 		else{
 			return{
@@ -176,9 +181,17 @@ exports.authenticate = async function(file, type, username){
 			if(type == "face") {
 				var faceInput = await facialRecognition.checkFace(file, username);
 	            if(faceInput.status === 'success') {
+	            	let token = "";
+	            	const mysql = require('../helpers/db').mysql;
+	            	let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+	            	await mysql.end();
+	            	if(checkIfExists.length){
+	            		token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+	            	}
 	            	return({
 	                	status: 200,
 	                	message: faceInput.message,
+	                	token: token,
 	                	data: {
 	                    	name: type
 	                		}
@@ -192,9 +205,17 @@ exports.authenticate = async function(file, type, username){
 			} else if(type == "voice") {
 				var voiceInput = await speechVerify.checkVoice(file, username);
 				if(voiceInput.status === 'success') {
+	            	let token = "";
+	            	const mysql = require('../helpers/db').mysql;
+	            	let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+	            	await mysql.end();
+	            	if(checkIfExists.length){
+	            		token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+	            	}					
 	            	return({
 	                	status: 200,
 	                	message: voiceInput.message,
+	                	token: token,
 	                	data: {
 	                    	name: type
 	                		}
