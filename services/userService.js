@@ -181,9 +181,17 @@ exports.authenticate = async function(file, type, username){
 			if(type == "face") {
 				var faceInput = await facialRecognition.checkFace(file, username);
 	            if(faceInput.status === 'success') {
+	            	let token = "";
+	            	const mysql = require('../helpers/db').mysql;
+	            	let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+	            	await mysql.end();
+	            	if(checkIfExists.length){
+	            		token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+	            	}
 	            	return({
 	                	status: 200,
 	                	message: faceInput.message,
+	                	token: token,
 	                	data: {
 	                    	name: type
 	                		}
@@ -197,9 +205,17 @@ exports.authenticate = async function(file, type, username){
 			} else if(type == "voice") {
 				var voiceInput = await speechVerify.checkVoice(file, username);
 				if(voiceInput.status === 'success') {
+	            	let token = "";
+	            	const mysql = require('../helpers/db').mysql;
+	            	let checkIfExists = await mysql.query("select * from user where username = ?", [username])
+	            	await mysql.end();
+	            	if(checkIfExists.length){
+	            		token = await jwt.sign({user: checkIfExists[0]}, process.env.SECRET);
+	            	}					
 	            	return({
 	                	status: 200,
 	                	message: voiceInput.message,
+	                	token: token,
 	                	data: {
 	                    	name: type
 	                		}
